@@ -1,0 +1,17 @@
+[entry]
+
+X11.64="res://target/debug/libkanji_game.so"
+OSX.64="res://target/debug/libkanji_game.dylib"
+Windows.64="res://target/debug/kanji_game.dll"
+
+[dependencies]
+
+X11.64=[  ]
+OSX.64=[  ]
+
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true

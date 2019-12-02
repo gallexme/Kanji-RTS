@@ -1,0 +1,10 @@
+[package]
+name = "kanji_game"
+version = "0.1.0"
+authors = ["lostchaos3@gmail.com"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+gdnative = {git="https://github.com/GodotNativeTools/godot-rust.git"}
