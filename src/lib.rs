@@ -1,8 +1,28 @@
 #[macro_use]
 extern crate gdnative as godot;
-
+extern crate legion;
 use godot::init::{Property, PropertyHint, PropertyUsage};
 use godot::GodotString;
+use legion::prelude::*;
+
+// Define our entity data types
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct Position {
+    x: f32,
+    y: f32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct Velocity {
+    dx: f32,
+    dy: f32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct Model(usize);
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+struct Static;
 
 struct RustTest {
     start: godot::Vector3,
@@ -19,6 +39,31 @@ impl godot::NativeClass for RustTest {
     }
 
     fn init(_owner: Self::Base) -> Self {
+        // Create a world to store our entities
+        let universe = Universe::new();
+        let mut world = universe.create_world();
+
+        // Create entities with `Position` and `Velocity` data
+        world.insert(
+            (),
+            (0..999).map(|_| (Position { x: 0.0, y: 0.0 }, Velocity { dx: 0.0, dy: 0.0 })),
+        );
+
+        // Create entities with `Position` data and a tagged with `Model` data and as `Static`
+        // Tags are shared across many entities, and enable further batch processing and filtering use cases
+        world.insert(
+            (Model(5), Static),
+            (0..999).map(|_| (Position { x: 0.0, y: 0.0 },)),
+        );
+
+        // Create a query which finds all `Position` and `Velocity` components
+        let mut query = <(Write<Position>, Read<Velocity>)>::query();
+
+        // Iterate through all entities that match the query in the world
+        for (mut pos, vel) in query.iter(&mut world) {
+            pos.x += vel.dx;
+            pos.y += vel.dy;
+        }
         Self::_init()
     }
 

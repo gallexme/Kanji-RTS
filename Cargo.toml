@@ -8,3 +8,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 gdnative = {git="https://github.com/GodotNativeTools/godot-rust.git"}
+legion="0.2.1"
